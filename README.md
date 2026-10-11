@@ -42,3 +42,8 @@ Asignatura impartida por el **Departamento de Ingeniería Eléctrica, Electróni
 Este repositorio tiene finalidad exclusivamente docente.
 
 Si detectas algún error o tienes alguna sugerencia de mejora, puedes comunicarlo al profesorado de la asignatura.
+
+
+**Practica 1 **: Entorno de desarrollo Linux
+Esta practica consiste en configurar el entorno de desarrollo en Linux, utilizar Git para controlar las versiones, compilar y ejecutar un programa en C++
+Modificaremos el codigo del ./tenis y le daremos movimiento a las raquetas y la esfera.
