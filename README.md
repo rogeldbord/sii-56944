@@ -44,6 +44,17 @@ Este repositorio tiene finalidad exclusivamente docente.
 Si detectas algún error o tienes alguna sugerencia de mejora, puedes comunicarlo al profesorado de la asignatura.
 
 
-**Practica 1 **: Entorno de desarrollo Linux
+**Practica 1**: Entorno de desarrollo Linux
 Esta practica consiste en configurar el entorno de desarrollo en Linux, utilizar Git para controlar las versiones, compilar y ejecutar un programa en C++
 Modificaremos el codigo del ./tenis y le daremos movimiento a las raquetas y la esfera.
+
+
+**Practica 2** 
+Comunicación mediante tuberías con nombre (FIFO)
+Esta practica usamos dos procesos mediante una tubería con nombre (FIFO).
+Se ha añadido un nuevo programa, ./logger, que crea la tubería "tenis_fifo", la abre en modo lectura y muestra por pantalla los mensajes que recibe. Cada vez que un jugador marca un punto, el programa ./tenis envía por la tubería el jugador que ha marcado y el total de puntos que lleva.
+La partida termina cuando uno de los jugadores alcanza 3 puntos: ./tenis cierra la tubería y finaliza, y ./logger detecta el cierre, borra la tubería y también finaliza.
+Si se crease mal la tuberia o se abriese antes ./tenis que ./logger, da un error. 
+Para ejecutarlo, hay que lanzar primero el logger y después el tenis, ambos desde la carpeta build:
+    ./logger
+    ./tenis
