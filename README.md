@@ -58,3 +58,15 @@ Si se crease mal la tuberia o se abriese antes ./tenis que ./logger, da un error
 Para ejecutarlo, hay que lanzar primero el logger y después el tenis, ambos desde la carpeta build:
     ./logger
     ./tenis
+    
+    
+**Practica 3**
+Comunicación mediante ficheros proyectados en memoria
+En esta práctica se añade un tercer proceso, ./bot, que controla de forma automática la raqueta del jugador 1. La comunicación entre ./tenis y ./bot se realiza mediante un fichero proyectado en memoria (mmap).
+Se ha creado la clase DatosMemCompartida (include/DatosMemCompartida.h), que contiene la esfera, la raqueta1 y la acción a realizar (1 arriba, 0 nada, -1 abajo). El programa ./tenis crea el fichero /tmp/datosBot.txt, lo proyecta en memoria y, en cada ciclo, escribe en él la posición de la pelota y de la raqueta1. El programa ./bot abre ese mismo fichero, lo proyecta y cada 25 ms compara la altura de la pelota con el centro de la raqueta para decidir la acción. ./tenis lee la acción y mueve la raqueta1 en consecuencia.
+Cuando ./tenis termina, elimina la proyección y borra el fichero. El ./bot no finaliza solo: hay que pararlo con Ctrl+C.
+Si se lanza ./bot antes que ./tenis da un error, porque el fichero todavía no existe.
+Para ejecutarlo, hay que lanzar primero el logger, después el tenis y por último el bot, desde la carpeta build:
+    ./logger
+    ./tenis
+    ./bot

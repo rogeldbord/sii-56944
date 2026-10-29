@@ -10,9 +10,13 @@
 #include <string.h>
 #include <math.h>
 
-//includes de opne, write y read
+//includes de open, write y read
 #include <fcntl.h>
 #include <unistd.h>
+
+#include <sys/mman.h>  //para usar mmap munmap
+#include <sys/stat.h> // para usar familia de funciones de stat
+#include <sys/types.h> //para usar size_t 
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -26,6 +30,9 @@ CMundo::CMundo()
 CMundo::~CMundo()
 {
 	close(fd_fifo);
+	munmap(pMemCompartida, sizeof(DatosMemCompartida));  //deshace la proyeccion en memoria 
+	unlink("/tmp/datosBot.txt"); //borra /tmp/datosBot
+	
 }
 
 void CMundo::InitGL()
@@ -119,6 +126,19 @@ void CMundo::OnDraw()
 
 void CMundo::OnTimer(int value)
 {	
+
+	//pasar al bot la posicion de la pelota y de la raqueta1
+	pMemCompartida->esfera = esfera;
+	pMemCompartida->raqueta1 = jugador1;
+
+	//aplicar la accion que ha decidido el bot
+	switch (pMemCompartida->accion) {
+		case 1:  OnKeyboardDown('w', 0, 0); break;   // arriba
+		case -1: OnKeyboardDown('s', 0, 0); break;   // abajo
+		default: jugador1.velocidad.y = 0;  break;   // nada: parar
+	}
+
+
 	jugador1.Mueve(0.025f);
 	jugador2.Mueve(0.025f);
 	esfera.Mueve(0.025f);
@@ -229,6 +249,20 @@ void CMundo::Init()
 		exit(1);
 	}
 		
-	
+	//fichero proyectado en memoria compartido con el bot
+	int fd_mem = open("/tmp/datosBot.txt", O_RDWR | O_CREAT | O_TRUNC, 0666);
+	if (fd_mem < 0){
+		perror("No se puede crear el fichero de memoria compartida");
+		exit(1);
+	}
+	ftruncate(fd_mem, sizeof(DatosMemCompartida));
+	pMemCompartida = (DatosMemCompartida*) mmap(NULL, sizeof(DatosMemCompartida),
+			PROT_READ | PROT_WRITE, MAP_SHARED, fd_mem, 0);
+	if (pMemCompartida == MAP_FAILED){
+		perror("Error en la proyeccion mmap");
+		exit(1);
+	}
+	close(fd_mem);
+	pMemCompartida->accion = 0;
 	
 }
